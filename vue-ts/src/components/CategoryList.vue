@@ -5,19 +5,23 @@ import ExpenseList from "./ExpenseList.vue";
 
 const selected = ref("");
 const categories = ref([]);
-const categoryInput = ref([]);
+const categoryInput = ref("");
 
 const sortedCategories = computed(() => {
   return categories.value.slice().sort((a, b) => a.name.localeCompare(b.name));
 });
 
 onMounted(() => {
+  fetchCategories();
+});
+
+const fetchCategories = () => {
   fetch("http://localhost:8080/categories", {
     method: "GET",
   })
     .then((response) => response.json())
     .then((data) => (categories.value = data));
-});
+};
 
 const setSelected = (value) => {
   selected.value = value;
@@ -38,23 +42,26 @@ const addCategory = () => {
     headers: {
       "Content-Type": "application/json",
     },
-    body: JSON.stringify({ name: categoryInput }),
+    body: JSON.stringify({ name: categoryInput.value }),
   })
     .then((response) => response.json())
     .then((newCategory) => {
       setCategories((prev) => [...prev, newCategory]);
       setCategoryInput("");
       setSelected(newCategory.name);
+      fetchCategories();
     });
 };
 
 const deleteCategory = () => {
   if (!selected) return;
-  fetch(`http://localhost:8080/categories/${encodeURIComponent(selected)}`, {
+  fetch(`http://localhost:8080/categories/${encodeURIComponent(selected.value)}`, {
     method: "DELETE",
   })
     .then(() => {
       setCategories((prev) => prev.filter((category) => category.name !== selected));
+      fetchCategories();
+      selected.value = "";
     })
     .catch((error) => {
       console.error("Error deleting category:", error);
@@ -65,7 +72,7 @@ const deleteCategory = () => {
 <template>
   <div>
     <div class="horizontalInputs">
-      <input @change="setCategoryInput(e.target.value)" type="text" placeholder="Category name" />
+      <input @input="setCategoryInput($event.target.value)" type="text" placeholder="Category name" />
       <button @click="addCategory" class="addButton">Add category</button>
       <button @click="deleteCategory" :disabled="!selected" class="deleteButton">Delete selected</button>
     </div>

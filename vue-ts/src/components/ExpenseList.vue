@@ -38,15 +38,15 @@ const formatDate = (dateString) => {
 
 const handleSubmit = (e) => {
   e.preventDefault();
-  if (!category) {
+  if (!props.category) {
     return;
   }
 
   const newExpense = {
-    name: nameRef.current.value,
-    amount: parseFloat(amountRef.current.value),
-    date: new Date(dateRef.current.value).toISOString(),
-    categoryFK: category,
+    name: nameRef.value,
+    amount: parseFloat(amountRef.value),
+    date: new Date(dateRef.value).toISOString(),
+    categoryFK: props.category,
   };
 
   fetch("http://localhost:8080/expenses", {
