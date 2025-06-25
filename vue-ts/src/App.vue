@@ -3,10 +3,23 @@ import CategoryList from "./components/CategoryList.vue";
 </script>
 
 <template>
-  <div>
-    <h2>React frontend</h2>
+  <div class="container">
+    <h2>Vue TS frontend</h2>
     <CategoryList />
   </div>
 </template>
 
-<style scoped></style>
+<style>
+html,
+body {
+  height: 100%;
+  margin: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.container {
+  text-align: center;
+}
+</style>
