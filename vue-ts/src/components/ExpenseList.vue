@@ -1,14 +1,14 @@
-<script setup>
+<script setup lang="ts">
 import { ref, onMounted, computed } from "vue";
 
 const props = defineProps({
   category: String,
 });
 
-const allExpenses = ref([]);
-const nameRef = ref();
-const amountRef = ref();
-const dateRef = ref();
+const allExpenses = ref<any[]>([]);
+const nameRef = ref<string>("");
+const amountRef = ref<number>(0);
+const dateRef = ref<Date>(new Date());
 
 const fetchExpenses = () => {
   fetch("http://localhost:8080/expenses", {
@@ -27,7 +27,7 @@ const expensesOfCategory = computed(() => {
   return allExpenses.value.filter((expense) => expense.categoryFK === props.category);
 });
 
-const formatDate = (dateString) => {
+const formatDate = (dateString: Date) => {
   const date = new Date(dateString);
   return date.toLocaleDateString(undefined, {
     year: "numeric",
@@ -36,7 +36,7 @@ const formatDate = (dateString) => {
   });
 };
 
-const handleSubmit = (e) => {
+const handleSubmit = (e: Event) => {
   e.preventDefault();
   if (!props.category) {
     return;
@@ -44,7 +44,7 @@ const handleSubmit = (e) => {
 
   const newExpense = {
     name: nameRef.value,
-    amount: parseFloat(amountRef.value),
+    amount: parseFloat(String(amountRef.value)),
     date: new Date(dateRef.value).toISOString(),
     categoryFK: props.category,
   };
@@ -60,8 +60,8 @@ const handleSubmit = (e) => {
     .then(() => {
       fetchExpenses();
       nameRef.value = "";
-      amountRef.value = "";
-      dateRef.value = "";
+      amountRef.value = 0;
+      dateRef.value = new Date();
     })
     .catch((err) => console.error("Error posting expense:", err));
 };

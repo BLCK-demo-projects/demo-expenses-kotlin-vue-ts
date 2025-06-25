@@ -1,11 +1,11 @@
-<script setup>
+<script setup lang="ts">
 import { onMounted, ref, computed } from "vue";
 import CategoryBubble from "./CategoryBubble.vue";
 import ExpenseList from "./ExpenseList.vue";
 
-const selected = ref("");
-const categories = ref([]);
-const categoryInput = ref("");
+const selected = ref<string>("");
+const categories = ref<any[]>([]);
+const categoryInput = ref<string>("");
 
 const sortedCategories = computed(() => {
   return categories.value.slice().sort((a, b) => a.name.localeCompare(b.name));
@@ -23,20 +23,27 @@ const fetchCategories = () => {
     .then((data) => (categories.value = data));
 };
 
-const setSelected = (value) => {
+const setSelected = (value: string) => {
   selected.value = value;
 };
 
-const setCategoryInput = (input) => {
-  categoryInput.value = input;
+const setCategoryInput = (input: Event | string) => {
+  if (typeof input === "string") {
+    categoryInput.value = input;
+  } else {
+    const target = input.target as HTMLInputElement;
+    if (target) {
+      categoryInput.value = target.value;
+    }
+  }
 };
 
-const setCategories = (categories) => {
-  categories.value = categories;
+const setCategories = (newCategories: any[]) => {
+  categories.value = newCategories;
 };
 
 const addCategory = () => {
-  if (!categoryInput || categoryInput.length > 30) return;
+  if (!categoryInput || categoryInput.value.length > 30) return;
   fetch("http://localhost:8080/categories", {
     method: "POST",
     headers: {
@@ -46,7 +53,7 @@ const addCategory = () => {
   })
     .then((response) => response.json())
     .then((newCategory) => {
-      setCategories((prev) => [...prev, newCategory]);
+      setCategories([...categories.value, newCategory]);
       setCategoryInput("");
       setSelected(newCategory.name);
       fetchCategories();
@@ -59,7 +66,7 @@ const deleteCategory = () => {
     method: "DELETE",
   })
     .then(() => {
-      setCategories((prev) => prev.filter((category) => category.name !== selected));
+      setCategories(categories.value.filter((category) => category.name !== selected.value));
       fetchCategories();
       selected.value = "";
     })
@@ -72,7 +79,7 @@ const deleteCategory = () => {
 <template>
   <div>
     <div class="horizontalInputs">
-      <input @input="setCategoryInput($event.target.value)" type="text" placeholder="Category name" />
+      <input @input="setCategoryInput" type="text" placeholder="Category name" />
       <button @click="addCategory" class="addButton">Add category</button>
       <button @click="deleteCategory" :disabled="!selected" class="deleteButton">Delete selected</button>
     </div>
