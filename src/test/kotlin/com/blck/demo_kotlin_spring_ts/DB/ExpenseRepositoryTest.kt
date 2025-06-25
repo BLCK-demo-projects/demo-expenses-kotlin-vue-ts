@@ -9,7 +9,6 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager
 import java.text.SimpleDateFormat
 import java.util.*
-import kotlin.math.exp
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue
 
