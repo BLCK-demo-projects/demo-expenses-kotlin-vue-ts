@@ -106,8 +106,7 @@ class IntegrationControllerTests {
         assertThat(response.statusCode).isEqualTo(HttpStatus.OK)
         assertThat(response.body)
             .isNotNull
-            .extracting(Expense::getName.toString())
-            .isEqualTo("Water")
+        assertThat(response.body?.getName()).isEqualTo("Water")
     }
 
     @Test
