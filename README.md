@@ -1,4 +1,6 @@
-**This is a 1:1 rewrite in Kotlin and Vue + TypeScript of the original:**
+This is a 1:1 rewrite in Kotlin and Vue + TypeScript of the original:
+
+ https://github.com/BLCK-demo-projects/demo-expenses
 
 ---
 
