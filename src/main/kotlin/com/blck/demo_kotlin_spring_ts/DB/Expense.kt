@@ -71,4 +71,8 @@ class Expense {
     fun setCategoryFK(category: Category?) {
         categoryFK = category
     }
+
+    fun getCategoryFK(): Category? {
+        return categoryFK
+    }
 }
